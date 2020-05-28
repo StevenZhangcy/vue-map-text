@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import echarts from "echarts";
 import "../../../node_modules/echarts/map/js/china.js"; // 引入中国地图数据
 export default {
   name: "echarts",
@@ -24,8 +23,8 @@ export default {
 
   methods: {
     chinaConfigure() {
-      console.log(this.userJson);
-      let myEchart = echarts.init(this.$refs.myEchart); // 获取容器
+      // console.log(this.userJson);
+      let myEchart = this.$echarts.init(this.$refs.myEchart); // 获取容器
       window.onresize = myEchart.onresize;
       myEchart.setOption({
         backgroundColor: "#02AFDB",
@@ -80,43 +79,6 @@ export default {
             }
           }
         },
-        // series: [
-        //   {
-        //     type: "scatter",
-        //     coordinateSystem: "geo" // 对应上方配置
-        //   },
-        //   {
-        //     name: "启动次数", // 浮动框的标题
-        //     type: "map",
-        //     geoIndex: 0,
-        //     data: [
-        //       {
-        //         name: "北京",
-        //         value: 599
-        //       },
-        //       {
-        //         name: "上海",
-        //         value: 142
-        //       },
-        //       {
-        //         name: "黑龙江",
-        //         value: 44
-        //       },
-        //       {
-        //         name: "深圳",
-        //         value: 92
-        //       },
-        //       {
-        //         name: "湖北",
-        //         value: 810
-        //       },
-        //       {
-        //         name: "四川",
-        //         value: 453
-        //       }
-        //     ]
-        //   }
-        // ]
         series: [
           {
             name: "",

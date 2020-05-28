@@ -23,8 +23,10 @@
     "echarts": "^4.5.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "file-loader": "^6.0.0",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
+    "svg-sprite-loader": "^5.0.0",
     "vue-template-compiler": "^2.6.10"
   }
 }

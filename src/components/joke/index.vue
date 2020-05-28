@@ -11,15 +11,39 @@
           :picker-options="pickerOptions"
         ></el-date-picker>
       </div>
-      <el-button type="primary" @click="getJoke()">查询</el-button>
+      <label style="display:inline-block;width:55px;height:40px;line-height:40px">页码:</label>
+      <el-input style="width:80px;margin-right:10px;" placeholder="请输入内容" v-model="page" clearable></el-input>
+      <label style="display:inline-block;width:55px;height:40px;line-height:40px;">条数:</label>
+      <el-input
+        style="width:80px;margin-right:10px"
+        placeholder="请输入内容"
+        v-model="pagesize"
+        clearable
+      ></el-input>
+      <el-button type="primary" @click="getParams()">查询</el-button>
+    </div>
+    <div class="content">
+      <!-- <img class="img" :src="hehe" alt srcset /> -->
+      <img class="img-left1" :src="hehe" alt srcset />
+      <img class="img-right1" :src="haha" alt srcset />
+      <div class="content-item" v-for="(item,j) in contentList" :key="j">
+        <p>{{item.content}}</p>
+        <span>{{item.updatetime}}</span>
+        <icon-svg :icon-class="imgGifClass" :class="item.unixtime" @click="dianZan($event,j)" />
+        <span>({{count}})</span>
+      </div>
     </div>
   </el-card>
 </template>
 
 <script>
+// import hehe from "@/assets/iamge/hehe.gif";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import "@/icons/svg/heart.svg";
+import "@/icons/svg/heart-active.svg";
+import hehe from "@/assets/iamge/hehe.gif";
+import haha from "@/assets/iamge/haha.gif";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -54,7 +78,15 @@ export default {
           }
         ]
       },
-      queryTime: ""
+      queryTime: "",
+      pagesize: 20,
+      page: 1,
+      contentList: [],
+      // hehe: require("@/assets/iamge/qingtian.jpg")
+      imgGifClass: "heart",
+      hehe: hehe,
+      haha: haha,
+      count: 0
     };
   },
   //监听属性 类似于data概念
@@ -63,14 +95,46 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    async getJoke() {
-      debugger;
-      let time = this.queryTime.substring(0, 10);
-      console.log(time);
-      // const res = await this.$http.get(
-      //   `joke/content/list.php?key=9e80daad85f3d331fdd563b17b49c39c&sort=desc&page=1&pagesize=20&time=` +
-      //     time
-      // );
+    dianZan(e, j) {
+      console.log(j);
+      if (this.imgGifClass == "heart") {
+        this.imgGifClass = "heart-active";
+        this.count++;
+      } else {
+        this.imgGifClass = "heart";
+        this.count--;
+      }
+
+      console.log(e.currentTarget.dataset.number);
+    },
+    getParams() {
+      let time = this.queryTime
+        ? Math.round(this.queryTime / 1000)
+        : Math.round(new Date().getTime() / 1000);
+      let params = {};
+
+      params.time = time;
+      params.pagesize = this.pagesize;
+      params.page = this.page;
+      this.getJoke(params);
+    },
+    async getJoke(params) {
+      const res = await this.$http.get(
+        `joke/content/list.php?key=9e80daad85f3d331fdd563b17b49c39c&sort=desc&page=` +
+          params.page +
+          `&pagesize=` +
+          params.pagesize +
+          `&time=` +
+          params.time
+      );
+      console.log(res);
+      const {
+        reason,
+        result: { data }
+      } = res.data;
+      if (reason == "Success") {
+        this.contentList = data;
+      }
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -91,11 +155,35 @@ export default {
 <style lang='less' scoped>
 .card {
   text-align: left;
+  position: relative;
 }
 .toolBar {
   display: flex;
   .block {
     margin-right: 10px;
+  }
+}
+.content {
+  overflow-y: scroll;
+  height: 500px;
+
+  .img-left1 {
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 80px;
+    left: 3%;
+  }
+  .img-right1 {
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 80px;
+    right: 5%;
+  }
+  .content-item {
+    width: 70%;
+    margin: 0 auto;
   }
 }
 //@import url(); 引入公共css类

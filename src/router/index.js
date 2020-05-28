@@ -5,6 +5,9 @@ import Main from '../views/Main/Main.vue'
 Vue.use(VueRouter)
 
 const routes = [{
+  path: '*',
+  redirect: '/map'
+}, {
   path: '/main',
   name: 'Main',
   component: Main,
