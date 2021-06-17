@@ -23,12 +23,16 @@
       <el-button type="primary" @click="getParams()">查询</el-button>
     </div>
     <div class="content">
-      <!-- <img class="img" :src="hehe" alt srcset /> -->
-      <img class="img-left1" :src="hehe" alt srcset />
       <img class="img-right1" :src="haha" alt srcset />
       <div class="content-item" v-for="(item,j) in contentList" :key="j">
-        <p>{{item.content}}</p>
-        <span>{{item.updatetime}}</span>
+        <div>{{item.title}}</div>
+         <br>
+        <img :src="item.image">
+        <br>
+        <el-button type="text" @click="open(item.path)">详情</el-button>
+        <br>
+        <span>更新时间: ({{item.passtime}})</span>
+        <br>
         <icon-svg :icon-class="imgGifClass" :class="item.unixtime" @click="dianZan($event,j)" />
         <span>({{count}})</span>
       </div>
@@ -95,6 +99,9 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    open(path) {
+      window.open(path);
+    },
     dianZan(e, j) {
       console.log(j);
       if (this.imgGifClass == "heart") {
@@ -108,32 +115,30 @@ export default {
       console.log(e.currentTarget.dataset.number);
     },
     getParams() {
-      let time = this.queryTime
-        ? Math.round(this.queryTime / 1000)
-        : Math.round(new Date().getTime() / 1000);
+      // let time = this.queryTime
+      //   ? Math.round(this.queryTime / 1000)
+      //   : Math.round(new Date().getTime() / 1000);
+      
       let params = {};
-
-      params.time = time;
       params.pagesize = this.pagesize;
       params.page = this.page;
-      this.getJoke(params);
+      this.getNews(params);
     },
-    async getJoke(params) {
+    async getNews(params) {
       const res = await this.$http.get(
-        `joke/content/list.php?key=9e80daad85f3d331fdd563b17b49c39c&sort=desc&page=` +
+        `https://api.apiopen.top/getWangYiNews?page=` +
           params.page +
-          `&pagesize=` +
-          params.pagesize +
-          `&time=` +
-          params.time
+          `&count=` +
+          params.pagesize
+          
       );
       console.log(res);
       const {
-        reason,
-        result: { data }
+        code,
+        result
       } = res.data;
-      if (reason == "Success") {
-        this.contentList = data;
+      if (code === 200) {
+        this.contentList = result;
       }
     }
   },
@@ -184,6 +189,7 @@ export default {
   .content-item {
     width: 70%;
     margin: 0 auto;
+    padding: 5px 0;
   }
 }
 //@import url(); 引入公共css类

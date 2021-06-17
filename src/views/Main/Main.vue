@@ -33,9 +33,9 @@
             <i class="el-icon-menu"></i>
             <span slot="title">天气预报</span>
           </el-menu-item>
-          <el-menu-item index="3" disabled>
+          <el-menu-item index="news">
             <i class="el-icon-document"></i>
-            <span slot="title">导航三</span>
+            <span slot="title">每日看点</span>
           </el-menu-item>
           <el-menu-item index="joke">
             <i class="el-icon-setting"></i>
